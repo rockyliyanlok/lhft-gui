@@ -6,6 +6,7 @@ export default css`
  body {
    background-color: ${theme.colors.white};
    color: ${theme.colors.astronautBlue};
+   font-family: ${({ theme }) => theme.fonts.robotoCondensed};
    text-rendering: optimizeLegibility;
    -webkit-font-smoothing: antialiased;
    -webkit-tap-highlight-color: transparent;
