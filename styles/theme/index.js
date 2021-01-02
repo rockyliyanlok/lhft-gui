@@ -4,5 +4,8 @@ export default {
     black: '#000000',
     white: '#ffffff'
   },
+  fonts: {
+    robotoCondensed: '\'Roboto Condensed\', sans-serif'
+  }
  }
  
