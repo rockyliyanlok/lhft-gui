@@ -1,8 +1,11 @@
 import { ELEMENTS_PER_PAGE, MAX_ELEMENTS } from '../config/app.config'
+import { InputNumber, Table } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import _forEach from 'lodash/forEach'
+import _isEmpty from 'lodash/isEmpty'
+import _isNil from 'lodash/isNil'
 import Head from 'next/head'
-import { Table } from 'antd'
+import theme from '../styles/theme'
 
 const debug = require('debug')('lhft-gui:pages/index')
 
@@ -13,8 +16,9 @@ const Index = () => {
     pageSize: ELEMENTS_PER_PAGE
   })
 
+  const findIndexBySymbol = (dataArray, symbol) => dataArray.findIndex(d => d.symbol === symbol)
+
   const updateData = useCallback(dataArray => {
-    const findIndexBySymbol = (dataArray, symbol) => dataArray.findIndex(d => d.symbol === symbol)
     if (Array.isArray(dataArray)) {
       setData(prevData => {
         const mergedData = [...prevData]
@@ -35,6 +39,18 @@ const Index = () => {
     }
   }, [])
 
+  const onThresoldChanged = (element, value) => {
+    setData(prevData => {
+      const updatedData = [...prevData]
+      const index = findIndexBySymbol(updatedData, element.symbol)
+      if (index >= 0) {
+        updatedData[index].thresold = value
+      }
+
+      return updatedData
+    })
+  }
+
   const columns = [
     {
       title: 'Symbol',
@@ -44,7 +60,27 @@ const Index = () => {
     {
       title: 'Price',
       dataIndex: 'price',
-      width: '50%'
+      width: '25%',
+      render: (text, element) => {
+        const delta = !(_isNil(element.thresold) && _isEmpty(element.thresold)) ? element.price - element.thresold : 0
+        const { colors } = theme
+        return {
+          props: {
+            style: Object.assign({},
+              delta !== 0 && { backgroundColor: delta > 0 ? colors.green : colors.red },
+              delta !== 0 && { color: colors.white }
+            )
+          },
+          children: <div>{text}</div>
+        }
+      }
+    },
+    {
+      title: 'Threshold',
+      dataIndex: 'threshold',
+      width: '25%',
+      // eslint-disable-next-line react/display-name
+      render: (text, element) => <InputNumber onChange={value => onThresoldChanged(element, value)} />
     }
   ]
 
