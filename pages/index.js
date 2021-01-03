@@ -1,5 +1,5 @@
-import { ELEMENTS_PER_PAGE, MAX_ELEMENTS } from '../config/app.config'
-import { InputNumber, Table } from 'antd'
+import { BACKEND_SERVICE_URL, ELEMENTS_PER_PAGE, MAX_ELEMENTS } from '../config/app.config'
+import { InputNumber, Spin, Table } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import _forEach from 'lodash/forEach'
 import _isEmpty from 'lodash/isEmpty'
@@ -10,6 +10,7 @@ import theme from '../styles/theme'
 const debug = require('debug')('lhft-gui:pages/index')
 
 const Index = () => {
+  const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
   const [pagination, setPagination] = useState({
     current: 1,
@@ -85,16 +86,18 @@ const Index = () => {
   ]
 
   useEffect(() => {
-    const events = new EventSource('https://lhft-backend.herokuapp.com/subscribe')
+    setLoading(true)
+    const events = new EventSource(`${BACKEND_SERVICE_URL}/subscribe`)
     events.onmessage = event => {
       const dataArray = JSON.parse(event.data)
       updateData(dataArray)
+      setLoading(false)
     }
 
     return () => {
       events.close()
     }
-  }, [updateData])
+  }, [setLoading, updateData])
 
   const onChange = (pagination, filters, sorter, extra) => {
     debug('onChange()', { pagination, filters, sorter, extra })
@@ -104,17 +107,19 @@ const Index = () => {
   return (
     <>
       <Head>
-        <title>LHFT GUI</title>
+        <title>LHFT GUI Realtime</title>
       </Head>
       <div>
-        <Table
-          columns={columns}
-          dataSource={data}
-          rowKey={element => `key${element.symbol}`}
-          size="small"
-          pagination={pagination}
-          onChange={onChange}
-        />
+        <Spin spinning={loading}>
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey={element => `key${element.symbol}`}
+            size="small"
+            pagination={pagination}
+            onChange={onChange}
+          />
+        </Spin>
       </div>
     </>
   )
