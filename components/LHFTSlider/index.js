@@ -3,7 +3,7 @@ import LHFTLogo from '../LHFTLogo'
 import React from 'react'
 import styled from 'styled-components'
 import {
-  TableOutlined,
+  TableOutlined
 } from '@ant-design/icons'
 
 const { Sider: AntdSlider } = Layout

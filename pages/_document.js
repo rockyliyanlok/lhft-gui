@@ -1,17 +1,18 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document'
+import Document, { Head, Html, Main, NextScript } from 'next/document'
 import { getLangFromReq } from '../utils/fromReq'
+import React from 'react'
 import { ServerStyleSheet } from 'styled-components'
 
 class MyDocument extends Document {
-  static async getInitialProps(ctx) {
+  static async getInitialProps (ctx) {
     const lang = getLangFromReq(ctx.req)
     const sheet = new ServerStyleSheet()
     const originalRenderPage = ctx.renderPage
 
     try {
-      ctx.renderPage = () => 
+      ctx.renderPage = () =>
         originalRenderPage({
-          enhanceApp: App => props => 
+          enhanceApp: App => props =>
             sheet.collectStyles(<App {...props} />)
         })
 
@@ -31,7 +32,7 @@ class MyDocument extends Document {
     }
   }
 
-  render() {
+  render () {
     return (
       <Html lang={this.props.lang}>
         <Head>

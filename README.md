@@ -8,3 +8,8 @@ A web GUI to present data from lhft-backend service.
 # npm install --save
 # npm run dev
 ```
+
+# Run eslint before commit
+```
+# npm run eslint
+```
