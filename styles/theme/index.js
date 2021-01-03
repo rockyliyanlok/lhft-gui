@@ -7,5 +7,4 @@ export default {
   fonts: {
     robotoCondensed: '\'Roboto Condensed\', sans-serif'
   }
- }
- 
+}

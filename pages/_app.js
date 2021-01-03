@@ -1,10 +1,10 @@
 import App from 'next/app'
 import GlobalStyle from '../styles/global'
 import LHFTLayout from '../components/LHFTLayout'
+import React from 'react'
 import stylesheet from 'antd/dist/antd.min.css'
 import theme from '../styles/theme'
 import { ThemeProvider } from 'styled-components'
-
 
 const MyApp = ({ Component, pageProps }) => {
   return (
